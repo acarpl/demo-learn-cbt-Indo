@@ -1,1 +1,910 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASAT Bahasa Indonesia Kelas 8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: { 50: '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a' },
+                        indigo: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.0/index.css" rel="stylesheet">
+    <style>
+        /* 3D Flip Card Styles */
+        .flip-card { perspective: 1000px; }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .flip-card-back { transform: rotateY(180deg); }
+
+        /* Smooth Tab Transitions */
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        /* Pulse animation for score */
+        @keyframes pulseScore { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .pulse-score { animation: pulseScore 0.5s ease-in-out; }
+
+        /* Essay answer toggle */
+        .essay-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.3s ease; }
+        .essay-answer.show { max-height: 1000px; padding-top: 1rem; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-teal-600 via-indigo-600 to-teal-700 text-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-6 text-center">
+            <div class="flex items-center justify-center gap-3 mb-2">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <h1 class="text-3xl md:text-4xl font-bold tracking-tight">ASAT Bahasa Indonesia</h1>
+            </div>
+            <p class="text-teal-100 text-lg md:text-xl font-medium">Kelas 8 SMP — Media Pembelajaran Interaktif</p>
+            <p class="text-teal-200 text-sm mt-1">Puisi (Majas & Citraan) • Teks Pidato</p>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex flex-col sm:flex-row gap-0 sm:gap-0">
+                <button onclick="switchTab('materi')" id="tab-materi" class="tab-btn flex-1 px-4 py-3 text-sm md:text-base font-semibold text-center transition-all duration-200 border-b-4 border-teal-500 text-teal-700 bg-teal-50">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2 2H7m4 0v1m0 0v1m0-1a2 2 0 012-2h2a2 2 0 012 2z"></path></svg>
+                        Rangkuman Materi
+                    </span>
+                </button>
+                <button onclick="switchTab('flashcard')" id="tab-flashcard" class="tab-btn flex-1 px-4 py-3 text-sm md:text-base font-semibold text-center transition-all duration-200 border-b-4 border-transparent text-slate-500 hover:text-indigo-600 hover:bg-indigo-50">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Flashcard Interaktif
+                    </span>
+                </button>
+                <button onclick="switchTab('latihan')" id="tab-latihan" class="tab-btn flex-1 px-4 py-3 text-sm md:text-base font-semibold text-center transition-all duration-200 border-b-4 border-transparent text-slate-500 hover:text-indigo-600 hover:bg-indigo-50">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Latihan Soal
+                    </span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+
+        <!-- ==================== TAB 1: RANGKUMAN MATERI ==================== -->
+        <div id="content-materi" class="tab-content active">
+
+            <!-- Section: Puisi - Majas -->
+            <section class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-8 bg-teal-500 rounded-full"></div>
+                    <h2 class="text-2xl font-bold text-slate-800">📝 Puisi — Majas (Gaya Bahasa)</h2>
+                </div>
+                <p class="text-slate-600 mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <strong>Majas</strong> adalah gaya bahasa yang digunakan untuk menyampaikan pesan secara kiasan agar lebih hidup, menarik, dan berkesan. Berikut adalah jenis-jenis majas yang sering muncul dalam ujian SMP.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Majas: Personifikasi -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-5 py-3">
+                            <h3 class="font-bold text-lg">🌿 Personifikasi</h3>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-slate-700 mb-3"><strong>Definisi:</strong> Majas yang <em>mengumpamakan benda mati seolah-olah memiliki sifat atau perilaku seperti manusia.</em></p>
+                            <div class="bg-teal-50 border-l-4 border-teal-400 p-3 rounded-r-lg">
+                                <p class="text-slate-800 italic">"Angin berbisik lembut di telingaku."</p>
+                                <p class="text-sm text-slate-600 mt-1">→ Angin (benda mati) digambarkan bisa <strong>berbisik</strong> (sifat manusia).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Majas: Metafora -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-5 py-3">
+                            <h3 class="font-bold text-lg">💎 Metafora</h3>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-slate-700 mb-3"><strong>Definisi:</strong> Majas yang <em>membandingkan dua hal secara langsung tanpa menggunakan kata pembanding (seperti, bagai, laksana).</em></p>
+                            <div class="bg-indigo-50 border-l-4 border-indigo-400 p-3 rounded-r-lg">
+                                <p class="text-slate-800 italic">"Dia adalah bintang kelas di sekolahnya."</p>
+                                <p class="text-sm text-slate-600 mt-1">→ Siswa yang berprestasi langsung disebut <strong>"bintang"</strong> tanpa kata pembanding.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Majas: Hiperbola -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-5 py-3">
+                            <h3 class="font-bold text-lg">🔥 Hiperbola</h3>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-slate-700 mb-3"><strong>Definisi:</strong> Majas yang <em>melebih-lebihkan sesuatu dari kenyataan sebenarnya untuk memberikan kesan mendalam.</em></p>
+                            <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded-r-lg">
+                                <p class="text-slate-800 italic">"Air matanya membanjiri ruangan."</p>
+                                <p class="text-sm text-slate-600 mt-1">→ Menangis sangat banyak, digambarkan secara <strong>berlebihan</strong> hingga membanjiri.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Majas: Simile/Asosiasi -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="bg-gradient-to-r from-rose-500 to-rose-600 text-white px-5 py-3">
+                            <h3 class="font-bold text-lg">🔗 Simile (Asosiasi)</h3>
+                        </div>
+                        <div class="p-5">
+                            <p class="text-slate-700 mb-3"><strong>Definisi:</strong> Majas yang <em>membandingkan dua hal secara langsung menggunakan kata pembanding (seperti, bagai, laksana, bak).</em></p>
+                            <div class="bg-rose-50 border-l-4 border-rose-400 p-3 rounded-r-lg">
+                                <p class="text-slate-800 italic">"Wajahnya bersinar bagai bulan purnama."</p>
+                                <p class="text-sm text-slate-600 mt-1">→ Menggunakan kata pembanding <strong>"bagai"</strong> untuk membandingkan wajah dengan bulan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Puisi - Citraan -->
+            <section class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-8 bg-indigo-500 rounded-full"></div>
+                    <h2 class="text-2xl font-bold text-slate-800">👁️ Puisi — Citraan (Imaji)</h2>
+                </div>
+                <p class="text-slate-600 mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <strong>Citraan (imaji)</strong> adalah penggunaan kata-kata yang dapat membangkitkan pengalaman indra pembaca, sehingga pembaca seolah-olah merasakan, melihat, mendengar, atau mencium sesuatu yang digambarkan dalam puisi.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Citraan Penglihatan -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-5 hover:shadow-lg transition-shadow">
+                        <div class="text-4xl mb-3">👁️</div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Citraan Penglihatan <span class="text-sm font-normal text-indigo-500">(Visual)</span></h3>
+                        <p class="text-sm text-slate-600 mb-3">Menggambarkan sesuatu yang dapat <strong>dilihat</strong> oleh mata.</p>
+                        <div class="bg-indigo-50 p-3 rounded-lg text-sm italic text-slate-700">
+                            "Langit biru berawan putih"<br>
+                            → Menggambarkan warna langit yang terlihat.
+                        </div>
+                    </div>
+
+                    <!-- Citraan Pendengaran -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-5 hover:shadow-lg transition-shadow">
+                        <div class="text-4xl mb-3">👂</div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Citraan Pendengaran <span class="text-sm font-normal text-indigo-500">(Auditif)</span></h3>
+                        <p class="text-sm text-slate-600 mb-3">Menggambarkan sesuatu yang dapat <strong>didengar</strong> oleh telinga.</p>
+                        <div class="bg-indigo-50 p-3 rounded-lg text-sm italic text-slate-700">
+                            "Dering lonceng terdengar merdu"<br>
+                            → Menggambarkan bunyi lonceng yang terdengar.
+                        </div>
+                    </div>
+
+                    <!-- Citraan Perabaan -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-5 hover:shadow-lg transition-shadow">
+                        <div class="text-4xl mb-3">✋</div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Citraan Perabaan <span class="text-sm font-normal text-indigo-500">(Taktil)</span></h3>
+                        <p class="text-sm text-slate-600 mb-3">Menggambarkan sesuatu yang dapat <strong>disentuh/diraba</strong>.</p>
+                        <div class="bg-indigo-50 p-3 rounded-lg text-sm italic text-slate-700">
+                            "Angin dingin menyentuh kulitku"<br>
+                            → Menggambarkan sensasi dingin yang terasa di kulit.
+                        </div>
+                    </div>
+
+                    <!-- Citraan Penciuman -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-5 hover:shadow-lg transition-shadow">
+                        <div class="text-4xl mb-3">👃</div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2">Citraan Penciuman <span class="text-sm font-normal text-indigo-500">(Olfaktori)</span></h3>
+                        <p class="text-sm text-slate-600 mb-3">Menggambarkan sesuatu yang dapat <strong>dicium/dibaui</strong>.</p>
+                        <div class="bg-indigo-50 p-3 rounded-lg text-sm italic text-slate-700">
+                            "Harum melati menyelimuti taman"<br>
+                            → Menggambarkan aroma bunga yang tercium.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Teks Pidato -->
+            <section class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-8 bg-teal-500 rounded-full"></div>
+                    <h2 class="text-2xl font-bold text-slate-800">🎤 Teks Pidato</h2>
+                </div>
+
+                <!-- Unsur-unsur Pidato -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 mb-5">
+                    <h3 class="font-bold text-xl text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="bg-teal-100 text-teal-700 p-2 rounded-lg text-lg">📋</span> Unsur-Unsur Teks Pidato
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-teal-100 text-teal-700 font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shrink-0 mt-0.5">1</span>
+                            <div>
+                                <strong class="text-slate-800">Judul/Topik Pidato</strong>
+                                <p class="text-sm text-slate-600">Tema atau pokok bahasan yang akan disampaikan dalam pidato.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-teal-100 text-teal-700 font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shrink-0 mt-0.5">2</span>
+                            <div>
+                                <strong class="text-slate-800">Pembicara (Orator)</strong>
+                                <p class="text-sm text-slate-600">Orang yang menyampaikan pidato di hadapan khalayak ramai.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-teal-100 text-teal-700 font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shrink-0 mt-0.5">3</span>
+                            <div>
+                                <strong class="text-slate-800">Pendengar (Audiens)</strong>
+                                <p class="text-sm text-slate-600">Orang atau kelompok orang yang menjadi sasaran pidato.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-teal-100 text-teal-700 font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shrink-0 mt-0.5">4</span>
+                            <div>
+                                <strong class="text-slate-800">Situasi dan Tempat</strong>
+                                <p class="text-sm text-slate-600">Latar atau konteks di mana pidato disampaikan (upacara, peringatan, seminar, dll.).</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-teal-100 text-teal-700 font-bold rounded-full w-7 h-7 flex items-center justify-center text-sm shrink-0 mt-0.5">5</span>
+                            <div>
+                                <strong class="text-slate-800">Tujuan Pidato</strong>
+                                <p class="text-sm text-slate-600">Apa yang ingin dicapai melalui pidato (persuasif, informatif, edukatif, rekreatif).</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tujuan Pidato -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 mb-5">
+                    <h3 class="font-bold text-xl text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="bg-indigo-100 text-indigo-700 p-2 rounded-lg text-lg">🎯</span> Tujuan Pidato
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                            <h4 class="font-bold text-indigo-700 mb-1">📢 Persuasif</h4>
+                            <p class="text-sm text-slate-700">Membujuk atau mengajak pendengar agar mempercayai atau melakukan sesuatu. <em>Contoh: Pidato ajakan menjaga kebersihan lingkungan.</em></p>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                            <h4 class="font-bold text-indigo-700 mb-1">📚 Informatif</h4>
+                            <p class="text-sm text-slate-700">Memberikan informasi atau pengetahuan kepada pendengar. <em>Contoh: Pidato tentang bahaya narkoba.</em></p>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                            <h4 class="font-bold text-indigo-700 mb-1">🎓 Edukatif</h4>
+                            <p class="text-sm text-slate-700">Mendidik atau memberikan pelajaran kepada pendengar. <em>Contoh: Pidato tentang pentingnya literasi.</em></p>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4">
+                            <h4 class="font-bold text-indigo-700 mb-1">🎭 Rekreatif</h4>
+                            <p class="text-sm text-slate-700">Menghibur atau menyenangkan pendengar. <em>Contoh: Pidato di acara perpisahan yang diselingi humor.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ciri Kebahasaan Pidato -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 mb-5">
+                    <h3 class="font-bold text-xl text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="bg-teal-100 text-teal-700 p-2 rounded-lg text-lg">✏️</span> Ciri-Ciri Kebahasaan Teks Pidato
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                            <span class="text-teal-500 text-lg">✅</span>
+                            <p class="text-sm text-slate-700"><strong>Menggunakan kata sapaan:</strong> <em>Bapak/Ibu, Hadirin, Saudara-saudara</em></p>
+                        </div>
+                        <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                            <span class="text-teal-500 text-lg">✅</span>
+                            <p class="text-sm text-slate-700"><strong>Menggunakan kata kerja imperatif (perintah/ajakan):</strong> <em>Marilah, Ayo, Hendaknya</em></p>
+                        </div>
+                        <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                            <span class="text-teal-500 text-lg">✅</span>
+                            <p class="text-sm text-slate-700"><strong>Menggunakan kalimat persuasif (bersifat mengajak):</strong> <em>Kita harus, Mari bersama-sama</em></p>
+                        </div>
+                        <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                            <span class="text-teal-500 text-lg">✅</span>
+                            <p class="text-sm text-slate-700"><strong>Bahasa formal dan santun:</strong> Sesuai dengan situasi resmi dan مخاط kepada audiens yang dihormati.</p>
+                        </div>
+                        <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                            <span class="text-teal-500 text-lg">✅</span>
+                            <p class="text-sm text-slate-700"><strong>Menggunakan kata penghubung (konjungsi):</strong> <em>Oleh karena itu, Dengan demikian, Selain itu</em></p>
+                        </div>
+                        <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                            <span class="text-teal-500 text-lg">✅</span>
+                            <p class="text-sm text-slate-700"><strong>Struktur yang jelas:</strong> Pembuka, Isi, dan Penutup yang terorganisir.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Struktur Pidato -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6">
+                    <h3 class="font-bold text-xl text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="bg-indigo-100 text-indigo-700 p-2 rounded-lg text-lg">🏗️</span> Struktur Teks Pidato
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-teal-500 pl-4 py-2 bg-teal-50 rounded-r-lg">
+                            <h4 class="font-bold text-teal-800">1. Pembuka Pidato</h4>
+                            <ul class="text-sm text-slate-700 mt-1 space-y-1 ml-4 list-disc">
+                                <li><strong>Salam pembuka:</strong> <em>Assalamu'alaikum, Selamat pagi, Salam sejahtera</em></li>
+                                <li><strong>Sapaan (Penghormatan):</strong> <em>Yang terhormat Bapak Kepala Sekolah, yang saya hormati Bapak/Ibu guru, serta teman-teman yang berbahagia</em></li>
+                                <li><strong>Ucapan syukur:</strong> <em>Puji syukur kehadirat Tuhan Yang Maha Esa atas rahmat dan karunia-Nya...</em></li>
+                            </ul>
+                        </div>
+                        <div class="border-l-4 border-indigo-500 pl-4 py-2 bg-indigo-50 rounded-r-lg">
+                            <h4 class="font-bold text-indigo-800">2. Isi Pidato</h4>
+                            <ul class="text-sm text-slate-700 mt-1 space-y-1 ml-4 list-disc">
+                                <li>Bagian inti yang memuat materi/topik yang disampaikan.</li>
+                                <li>Berisi penjelasan, argumen, contoh, dan ajakan.</li>
+                                <li>Disusun secara sistematis dan logis.</li>
+                            </ul>
+                        </div>
+                        <div class="border-l-4 border-amber-500 pl-4 py-2 bg-amber-50 rounded-r-lg">
+                            <h4 class="font-bold text-amber-800">3. Penutup Pidato</h4>
+                            <ul class="text-sm text-slate-700 mt-1 space-y-1 ml-4 list-disc">
+                                <li><strong>Kesimpulan:</strong> Ringkasan dari isi pidato.</li>
+                                <li><strong>Harapan:</strong> Harapan pembicara kepada pendengar.</li>
+                                <li><strong>Permohonan maaf:</strong> <em>Apabila ada kata-kata yang kurang berkenan, saya mohon maaf.</em></li>
+                                <li><strong>Salam penutup:</strong> <em>Wassalamu'alaikum wr. wb., Terima kasih, Selamat pagi</em></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ==================== TAB 2: FLASHCARD INTERAKTIF ==================== -->
+        <div id="content-flashcard" class="tab-content">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">🃏 Flashcard Interaktif</h2>
+                <p class="text-slate-600">Klik kartu untuk membalik dan melihat jawabannya. Gunakan tombol navigasi untuk berpindah kartu.</p>
+            </div>
+
+            <!-- Flashcard Container -->
+            <div class="max-w-2xl mx-auto">
+                <!-- Card Counter -->
+                <div class="text-center mb-4">
+                    <span id="card-counter" class="inline-block bg-indigo-100 text-indigo-700 font-bold px-4 py-1.5 rounded-full text-sm">Kartu 1 dari 12</span>
+                </div>
+
+                <!-- Flip Card -->
+                <div class="flip-card w-full h-72 cursor-pointer" id="flashcard" onclick="flipCard()">
+                    <div class="flip-card-inner" id="flashcard-inner">
+                        <!-- Front -->
+                        <div class="flip-card-front bg-gradient-to-br from-teal-500 to-indigo-600 text-white shadow-xl">
+                            <div class="text-5xl mb-3" id="card-icon">📝</div>
+                            <p class="text-xs uppercase tracking-widest mb-2 opacity-75">Pertanyaan / Istilah</p>
+                            <h3 class="text-xl md:text-2xl font-bold text-center px-4" id="card-front-text">Memuat...</h3>
+                            <p class="text-sm mt-4 opacity-75">👆 Klik untuk membalik</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="flip-card-back bg-gradient-to-br from-slate-700 to-slate-900 text-white shadow-xl">
+                            <div class="text-3xl mb-2">💡</div>
+                            <p class="text-xs uppercase tracking-widest mb-2 opacity-75">Jawaban / Penjelasan</p>
+                            <p class="text-base md:text-lg text-center px-4 leading-relaxed" id="card-back-text">Memuat...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex items-center justify-center gap-4 mt-6">
+                    <button onclick="prevCard()" id="btn-prev" class="flex items-center gap-2 bg-white text-slate-700 font-semibold px-5 py-2.5 rounded-xl shadow-md hover:bg-slate-100 transition-colors border border-slate-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Sebelumnya
+                    </button>
+                    <button onclick="nextCard()" id="btn-next" class="flex items-center gap-2 bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:bg-indigo-700 transition-colors">
+                        Selanjutnya
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 3: LATIHAN SOAL ==================== -->
+        <div id="content-latihan" class="tab-content">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">📝 Latihan Soal</h2>
+                <p class="text-slate-600">Jawab 15 soal Pilihan Ganda dan 3 soal Essay berikut. Klik opsi untuk melihat hasilnya!</p>
+            </div>
+
+            <!-- Pilihan Ganda Section -->
+            <section class="mb-8">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-1 h-8 bg-teal-500 rounded-full"></div>
+                    <h3 class="text-xl font-bold text-slate-800">Pilihan Ganda (15 Soal)</h3>
+                </div>
+
+                <div id="pg-questions" class="space-y-5">
+                    <!-- Soal PG akan di-generate oleh JavaScript -->
+                </div>
+
+                <!-- Score Display -->
+                <div id="score-display" class="hidden mt-6 bg-gradient-to-r from-teal-500 to-indigo-600 rounded-2xl p-6 text-white text-center shadow-lg pulse-score">
+                    <h3 class="text-2xl font-bold mb-2">🎉 Skor Kamu</h3>
+                    <p class="text-4xl font-bold" id="score-text">0 / 15</p>
+                    <p class="text-lg mt-1 opacity-90" id="score-message">Jawab semua soal untuk melihat skor!</p>
+                </div>
+            </section>
+
+            <!-- Essay Section -->
+            <section class="mb-8">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-1 h-8 bg-indigo-500 rounded-full"></div>
+                    <h3 class="text-xl font-bold text-slate-800">Essay (3 Soal)</h3>
+                </div>
+
+                <div id="essay-questions" class="space-y-5">
+                    <!-- Soal Essay akan di-generate oleh JavaScript -->
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 text-center py-6 mt-8">
+        <p class="text-sm">© 2026 ASAT Bahasa Indonesia Kelas 8 — Media Pembelajaran Interaktif</p>
+        <p class="text-xs mt-1">Dibuat untuk membantu siswa SMP memahami Puisi dan Teks Pidato</p>
+    </footer>
+
+    <script>
+        // ============================================================
+        // TAB NAVIGATION
+        // ============================================================
+        function switchTab(tabName) {
+            // Sembunyikan semua konten tab
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            // Tampilkan tab yang dipilih
+            document.getElementById('content-' + tabName).classList.add('active');
+
+            // Update style tombol tab
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-teal-500', 'text-teal-700', 'bg-teal-50');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.remove('border-transparent', 'text-slate-500');
+            activeBtn.classList.add('border-teal-500', 'text-teal-700', 'bg-teal-50');
+
+            // Scroll ke atas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================================
+        // FLASHCARD DATA & LOGIC
+        // ============================================================
+        const flashcardData = [
+            {
+                icon: '🌿',
+                front: 'Apa itu Majas Personifikasi?',
+                back: 'Majas yang mengumpamakan benda mati seolah-olah memiliki sifat atau perilaku seperti manusia. Contoh: "Angin berbisik lembut di telingaku."'
+            },
+            {
+                icon: '💎',
+                front: 'Apa itu Majas Metafora?',
+                back: 'Majas yang membandingkan dua hal secara langsung TANPA kata pembanding. Contoh: "Dia adalah bintang kelas di sekolahnya."'
+            },
+            {
+                icon: '🔥',
+                front: 'Apa itu Majas Hiperbola?',
+                back: 'Majas yang melebih-lebihkan sesuatu dari kenyataan sebenarnya. Contoh: "Air matanya membanjiri ruangan."'
+            },
+            {
+                icon: '🔗',
+                front: 'Apa itu Majas Simile (Asosiasi)?',
+                back: 'Majas yang membandingkan dua hal secara langsung MENGGUNAKAN kata pembanding (seperti, bagai, laksana, bak). Contoh: "Wajahnya bersinar bagai bulan purnama."'
+            },
+            {
+                icon: '👁️',
+                front: 'Apa itu Citraan Penglihatan (Visual)?',
+                back: 'Citraan yang menggambarkan sesuatu yang dapat DILIHAT oleh mata. Contoh: "Langit biru berawan putih" — menggambarkan warna yang terlihat.'
+            },
+            {
+                icon: '👂',
+                front: 'Apa itu Citraan Pendengaran (Auditif)?',
+                back: 'Citraan yang menggambarkan sesuatu yang dapat DIDENGAR oleh telinga. Contoh: "Dering lonceng terdengar merdu" — menggambarkan bunyi.'
+            },
+            {
+                icon: '✋',
+                front: 'Apa itu Citraan Perabaan (Taktil)?',
+                back: 'Citraan yang menggambarkan sesuatu yang dapat DISENTOH/DIRABA. Contoh: "Angin dingin menyentuh kulitku" — menggambarkan sensasi di kulit.'
+            },
+            {
+                icon: '👃',
+                front: 'Apa itu Citraan Penciuman (Olfaktori)?',
+                back: 'Citraan yang menggambarkan sesuatu yang dapat DICUM/DIBAU. Contoh: "Harum melati menyelimuti taman" — menggambarkan aroma bunga.'
+            },
+            {
+                icon: '🎤',
+                front: 'Sebutkan 3 Struktur Teks Pidato!',
+                back: '1) Pembuka (salam, sapaan, ucapan syukur), 2) Isi Pidato (materi/topik utama), 3) Penutup (kesimpulan, harapan, permohonan maaf, salam penutup).'
+            },
+            {
+                icon: '🎯',
+                front: 'Apa itu Pidato Persuasif?',
+                back: 'Pidato yang bertujuan MEMBUJUK atau MENGAJAK pendengar agar mempercayai atau melakukan sesuatu. Contoh: Pidato ajakan menjaga kebersihan lingkungan.'
+            },
+            {
+                icon: '📚',
+                front: 'Apa itu Pidato Informatif?',
+                back: 'Pidato yang bertujuan MEMBERIKAN INFORMASI atau pengetahuan kepada pendengar. Contoh: Pidato tentang bahaya narkoba atau cara menjaga kesehatan.'
+            },
+            {
+                icon: '✏️',
+                front: 'Sebutkan 3 Ciri Kebahasaan Teks Pidato!',
+                back: '1) Menggunakan kata sapaan (Bapak/Ibu, Hadirin), 2) Menggunakan kata kerja imperatif (Marilah, Ayo, Hendaknya), 3) Menggunakan kalimat persuasif (Kita harus, Mari bersama-sama).'
+            }
+        ];
+
+        let currentCardIndex = 0;
+        let isFlipped = false;
+
+        function updateFlashcard() {
+            const card = flashcardData[currentCardIndex];
+            document.getElementById('card-icon').textContent = card.icon;
+            document.getElementById('card-front-text').textContent = card.front;
+            document.getElementById('card-back-text').textContent = card.back;
+            document.getElementById('card-counter').textContent = `Kartu ${currentCardIndex + 1} dari ${flashcardData.length}`;
+
+            // Reset flip state
+            isFlipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            isFlipped = !isFlipped;
+            if (isFlipped) {
+                card.classList.add('flipped');
+            } else {
+                card.classList.remove('flipped');
+            }
+        }
+
+        function nextCard() {
+            if (currentCardIndex < flashcardData.length - 1) {
+                currentCardIndex++;
+                updateFlashcard();
+            } else {
+                // Kembali ke kartu pertama
+                currentCardIndex = 0;
+                updateFlashcard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateFlashcard();
+            } else {
+                // Pindah ke kartu terakhir
+                currentCardIndex = flashcardData.length - 1;
+                updateFlashcard();
+            }
+        }
+
+        // ============================================================
+        // SOAL PILIHAN GANDA
+        // ============================================================
+        const pgQuestions = [
+            {
+                question: 'Majas yang mengumpamakan benda mati seolah-olah memiliki sifat seperti manusia disebut ....',
+                options: ['A. Metafora', 'B. Personifikasi', 'C. Hiperbola', 'D. Simile'],
+                answer: 1
+            },
+            {
+                question: '"Daun itu menari-nari tertiup angin kencang." Majas yang digunakan dalam kalimat tersebut adalah ....',
+                options: ['A. Metafora', 'B. Simile', 'C. Personifikasi', 'D. Hiperbola'],
+                answer: 2
+            },
+            {
+                question: 'Majas yang membandingkan dua hal secara langsung TANPA kata pembanding seperti/bagai disebut ....',
+                options: ['A. Simile', 'B. Personifikasi', 'C. Metafora', 'D. Hiperbola'],
+                answer: 2
+            },
+            {
+                question: '"Pelajar adalah tunas bangsa yang kelak akan membawa perubahan." Majas pada kalimat tersebut adalah ....',
+                options: ['A. Personifikasi', 'B. Simile', 'C. Hiperbola', 'D. Metafora'],
+                answer: 3
+            },
+            {
+                question: '"Suaranya menggelegar membelah langit." Majas yang terdapat pada kalimat tersebut adalah ....',
+                options: ['A. Hiperbola', 'B. Personifikasi', 'C. Metafora', 'D. Simile'],
+                answer: 0
+            },
+            {
+                question: 'Majas yang membandingkan dua hal secara langsung MENGGUNAKAN kata pembanding seperti/bagai/laksana disebut ....',
+                options: ['A. Metafora', 'B. Personifikasi', 'C. Simile (Asosiasi)', 'D. Hiperbola'],
+                answer: 2
+            },
+            {
+                question: 'Citraan yang menggambarkan sesuatu yang dapat DIDENGAR oleh telinga disebut ....',
+                options: ['A. Citraan Penglihatan', 'B. Citraan Pendengaran (Auditif)', 'C. Citraan Perabaan', 'D. Citraan Penciuman'],
+                answer: 1
+            },
+            {
+                question: '"Harum bunga mawar tercium hingga ke ujung taman." Kalimat tersebut menggunakan citraan ....',
+                options: ['A. Penglihatan', 'B. Pendengaran', 'C. Perabaan', 'D. Penciuman (Olfaktori)'],
+                answer: 3
+            },
+            {
+                question: '"Kulitku merasakan dinginnya salju yang turun perlahan." Kalimat tersebut menggunakan citraan ....',
+                options: ['A. Penglihatan', 'B. Pendengaran', 'C. Perabaan (Taktil)', 'D. Penciuman'],
+                answer: 2
+            },
+            {
+                question: '"Langit pagi berwarna jingga keemasan." Kalimat tersebut menggunakan citraan ....',
+                options: ['A. Penglihatan (Visual)', 'B. Pendengaran', 'C. Perabaan', 'D. Penciuman'],
+                answer: 0
+            },
+            {
+                question: 'Bagian pembuka teks pidato yang berisi penghormatan kepada tamu undangan dan hadirin disebut ....',
+                options: ['A. Salam pembuka', 'B. Sapaan (Penghormatan)', 'C. Ucapan syukur', 'D. Kesimpulan'],
+                answer: 1
+            },
+            {
+                question: 'Pidato yang bertujuan mengajak pendengar untuk melakukan sesuatu disebut pidato ....',
+                options: ['A. Informatif', 'B. Edukatif', 'C. Rekreatif', 'D. Persuasif'],
+                answer: 3
+            },
+            {
+                question: 'Kata-kata seperti "Marilah", "Ayo", "Hendaknya" dalam teks pidato termasuk ciri kebahasaan berupa ....',
+                options: ['A. Kata sapaan', 'B. Kata kerja imperatif (ajakan)', 'C. Kata penghubung', 'D. Kata sifat'],
+                answer: 1
+            },
+            {
+                question: 'Struktur teks pidato yang berisi kesimpulan, harapan, dan permohonan maaf adalah bagian ....',
+                options: ['A. Pembuka', 'B. Isi', 'C. Penutup', 'D. Judul'],
+                answer: 2
+            },
+            {
+                question: 'Ciri kebahasaan teks pidato yang menggunakan kata-kata seperti "Yang terhormat Bapak Kepala Sekolah" termasuk ....',
+                options: ['A. Kalimat persuasif', 'B. Kata kerja imperatif', 'C. Kata sapaan/penghormatan', 'D. Konjungsi'],
+                answer: 2
+            }
+        ];
+
+        // State untuk menyimpan jawaban PG
+        let pgAnswers = new Array(pgQuestions.length).fill(null);
+        let pgScore = 0;
+
+        function renderPGQuestions() {
+            const container = document.getElementById('pg-questions');
+            let html = '';
+
+            pgQuestions.forEach((q, qIndex) => {
+                html += `
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-5" id="pg-question-${qIndex}">
+                        <p class="font-bold text-slate-800 mb-3"><span class="bg-indigo-100 text-indigo-700 rounded-full w-7 h-7 inline-flex items-center justify-center text-sm font-bold mr-2">${qIndex + 1}</span> ${q.question}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${q.options.map((opt, oIndex) => `
+                                <button onclick="checkPGAnswer(${qIndex}, ${oIndex}, this)" class="pg-option text-left px-4 py-3 rounded-xl border-2 border-slate-200 text-slate-700 font-medium hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-200" data-q="${qIndex}" data-o="${oIndex}">
+                                    ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                        <p class="mt-2 text-sm font-medium hidden" id="pg-feedback-${qIndex}"></p>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function checkPGAnswer(qIndex, oIndex, btnElement) {
+            // Jika sudah dijawab, abaikan
+            if (pgAnswers[qIndex] !== null) return;
+
+            const correctAnswer = pgQuestions[qIndex].answer;
+            pgAnswers[qIndex] = oIndex;
+
+            // Ambil semua opsi untuk soal ini
+            const allOptions = document.querySelectorAll(`.pg-option[data-q="${qIndex}"]`);
+            const feedbackEl = document.getElementById(`pg-feedback-${qIndex}`);
+
+            allOptions.forEach(opt => {
+                const optIdx = parseInt(opt.getAttribute('data-o'));
+                opt.classList.remove('hover:border-indigo-300', 'hover:bg-indigo-50');
+
+                if (optIdx === correctAnswer) {
+                    // Opsi yang benar selalu hijau
+                    opt.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                }
+
+                if (optIdx === oIndex && oIndex !== correctAnswer) {
+                    // Jawaban yang dipilih tapi salah
+                    opt.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                }
+
+                // Disable semua tombol
+                opt.disabled = true;
+                opt.classList.add('cursor-not-allowed', 'opacity-80');
+            });
+
+            // Tampilkan feedback
+            if (oIndex === correctAnswer) {
+                feedbackEl.textContent = '✅ Benar!';
+                feedbackEl.className = 'mt-2 text-sm font-bold text-green-600';
+            } else {
+                feedbackEl.textContent = `❌ Salah. Jawaban yang benar: ${pgQuestions[qIndex].options[correctAnswer]}`;
+                feedbackEl.className = 'mt-2 text-sm font-bold text-red-600';
+            }
+            feedbackEl.classList.remove('hidden');
+
+            // Hitung skor
+            let answeredCount = pgAnswers.filter(a => a !== null).length;
+            let correctCount = 0;
+            pgAnswers.forEach((ans, idx) => {
+                if (ans !== null && ans === pgQuestions[idx].answer) {
+                    correctCount++;
+                }
+            });
+
+            // Tampilkan skor jika semua soal sudah dijawab
+            if (answeredCount === pgQuestions.length) {
+                const scoreDisplay = document.getElementById('score-display');
+                document.getElementById('score-text').textContent = `${correctCount} / ${pgQuestions.length}`;
+                document.getElementById('score-message').textContent = getScoreMessage(correctCount, pgQuestions.length);
+                scoreDisplay.classList.remove('hidden');
+                scoreDisplay.classList.add('pulse-score');
+            }
+        }
+
+        function getScoreMessage(correct, total) {
+            const percentage = (correct / total) * 100;
+            if (percentage === 100) return '🌟 Sempurna! Kamu luar biasa!';
+            if (percentage >= 80) return '🎉 Hebat! Pertahankan semangatmu!';
+            if (percentage >= 60) return '👍 Bagus! Terus berlatih ya!';
+            if (percentage >= 40) return '💪 Cukup baik! Ayo pelajari lagi materinya!';
+            return '📖 Jangan menyerah! Baca kembali rangkuman materi ya!';
+        }
+
+        // ============================================================
+        // SOAL ESSAY
+        // ============================================================
+        const essayQuestions = [
+            {
+                question: 'Jelaskan pengertian teks pidato menurut pemahamanmu!',
+                answer: `<strong>Pengertian Teks Pidato:</strong><br><br>
+                    Teks pidato adalah <em>sebuah teks yang berisi rangkaian kalimat yang disampaikan secara lisan oleh seseorang (orator) di hadapan khalayak ramai (audiens) untuk menyampaikan gagasan, pikiran, atau informasi mengenai suatu hal.</em><br><br>
+                    Pidato merupakan salah satu bentuk kegiatan berbicara di depan umum (<strong>public speaking</strong>) yang memiliki tujuan tertentu, seperti mengajak, memberi informasi, mendidik, atau menghibur pendengar.<br><br>
+                    Ciri utama teks pidato adalah memiliki <strong>struktur yang jelas</strong> (pembuka, isi, penutup) dan menggunakan <strong>kebahasaan yang formal dan santun</strong> sesuai dengan situasi dan audiens yang dihadapi.`
+            },
+            {
+                question: 'Jelaskan struktur teks pidato yang benar beserta unsur-unsur di setiap bagiannya!',
+                answer: `<strong>Struktur Teks Pidato yang Benar:</strong><br><br>
+                    <strong>1. Pembuka Pidato</strong><br>
+                    Bagian awal pidato yang terdiri dari:<br>
+                    • <strong>Salam pembuka:</strong> Misalnya "Assalamu'alaikum wr. wb.", "Selamat pagi", atau "Salam sejahtera bagi kita semua."<br>
+                    • <strong>Sapaan/Penghormatan:</strong> Menyebutkan dan menghormati pihak-pihak yang hadir, misalnya "Yang terhormat Bapak Kepala Sekolah, yang saya hormati Bapak/Ibu guru, serta teman-teman yang berbahagia."<br>
+                    • <strong>Ucapan syukur:</strong> Ungkapan terima kasih kepada Tuhan, misalnya "Puji syukur kehadirat Tuhan Yang Maha Esa atas rahmat dan karunia-Nya sehingga kita dapat berkumpul..."<br><br>
+
+                    <strong>2. Isi Pidato</strong><br>
+                    Bagian inti yang memuat:<br>
+                    • Materi atau topik utama yang ingin disampaikan<br>
+                    • Penjelasan, argumen, dan contoh yang mendukung topik<br>
+                    • Ajakan atau pesan yang ingin disampaikan kepada pendengar<br>
+                    • Disusun secara sistematis, logis, dan mudah dipahami<br><br>
+
+                    <strong>3. Penutup Pidato</strong><br>
+                    Bagian akhir pidato yang terdiri dari:<br>
+                    • <strong>Kesimpulan:</strong> Ringkasan singkat dari isi pidato<br>
+                    • <strong>Harapan:</strong> Harapan pembicara agar pesan pidato dapat dilaksanakan<br>
+                    • <strong>Permohonan maaf:</strong> Misalnya "Apabila ada kata-kata yang kurang berkenan, saya mohon maaf yang sebesar-besarnya."<br>
+                    • <strong>Salam penutup:</strong> Misalnya "Wassalamu'alaikum wr. wb." atau "Terima kasih, selamat pagi."`
+            },
+            {
+                question: 'Bagaimana cara menemukan dan menyimpulkan inti/pesan utama dari sebuah teks pidato?',
+                answer: `<strong>Cara Menemukan dan Menyimpulkan Inti/Pesan Utama Teks Pidato:</strong><br><br>
+                    Untuk menemukan inti atau pesan utama dari sebuah teks pidato, ikuti langkah-langkah berikut:<br><br>
+
+                    <strong>1. Baca seluruh teks pidato dengan cermat</strong><br>
+                    • Pahami setiap bagian: pembuka, isi, dan penutup.<br>
+                    • Perhatikan topik yang dibahas secara keseluruhan.<br><br>
+
+                    <strong>2. Identifikasi bagian isi pidato</strong><br>
+                    • Bagian isi biasanya mengandung gagasan utama atau pesan yang ingin disampaikan.<br>
+                    • Cari kalimat-kalimat kunci yang mengandung ajakan, saran, atau pesan penting.<br><br>
+
+                    <strong>3. Temukan kalimat-kalimat kunci</strong><br>
+                    • Perhatikan kalimat yang bersifat persuasif (ajakan), misalnya yang menggunakan kata "marilah", "kita harus", "hendaknya".<br>
+                    • Perhatikan juga kalimat yang bersifat menyimpulkan atau memberikan penekanan.<br><br>
+
+                    <strong>4. Ringkas gagasan utama menjadi satu kalimat inti</strong><br>
+                    • Gabungkan poin-poin penting yang ditemukan menjadi satu kesatuan pesan.<br>
+                    • Pastikan ringkasan tersebut mewakili seluruh isi pidato.<br><br>
+
+                    <strong>5. Periksa kembali</strong><br>
+                    • Pastikan inti/pesan yang disimpulkan sudah tepat dan sesuai dengan tujuan pidato.<br>
+                    • Tanyakan pada diri sendiri: "Apa yang ingin disampaikan oleh pembicara kepada pendengar?"<br><br>
+
+                    <strong>Contoh:</strong><br>
+                    Jika pidato membahas pentingnya menjaga kebersihan lingkungan dengan ajakan untuk membuang sampah pada tempatnya dan melakukan kerja bakti, maka inti pesannya adalah: <em>"Menjaga kebersihan lingkungan merupakan tanggung jawab bersama yang harus dilakukan oleh setiap individu."</em>`
+            }
+        ];
+
+        function renderEssayQuestions() {
+            const container = document.getElementById('essay-questions');
+            let html = '';
+
+            essayQuestions.forEach((q, qIndex) => {
+                html += `
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-5" id="essay-question-${qIndex}">
+                        <p class="font-bold text-slate-800 mb-3"><span class="bg-indigo-100 text-indigo-700 rounded-full w-7 h-7 inline-flex items-center justify-center text-sm font-bold mr-2">E${qIndex + 1}</span> ${q.question}</p>
+                        <textarea class="w-full border-2 border-slate-200 rounded-xl p-4 text-slate-700 text-sm min-h-[120px] focus:border-indigo-400 focus:outline-none resize-y" placeholder="Tulis jawabanmu di sini..." rows="4"></textarea>
+                        <button onclick="toggleEssayAnswer(${qIndex})" id="essay-btn-${qIndex}" class="mt-3 flex items-center gap-2 bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md hover:bg-indigo-700 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            Lihat Kunci Jawaban
+                        </button>
+                        <div id="essay-answer-${qIndex}" class="essay-answer">
+                            <div class="bg-gradient-to-r from-teal-50 to-indigo-50 border-2 border-indigo-200 rounded-xl p-5 mt-3">
+                                <p class="text-sm text-slate-800 leading-relaxed">${q.answer}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleEssayAnswer(qIndex) {
+            const answerEl = document.getElementById(`essay-answer-${qIndex}`);
+            const btnEl = document.getElementById(`essay-btn-${qIndex}`);
+
+            if (answerEl.classList.contains('show')) {
+                answerEl.classList.remove('show');
+                btnEl.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Lihat Kunci Jawaban
+                `;
+            } else {
+                answerEl.classList.add('show');
+                btnEl.innerHTML = `
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>
+                    Sembunyikan Kunci Jawaban
+                `;
+            }
+        }
+
+        // ============================================================
+        // INITIALIZE
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPGQuestions();
+            renderEssayQuestions();
+            updateFlashcard();
+        });
+    </script>
+</body>
+</html>
 
